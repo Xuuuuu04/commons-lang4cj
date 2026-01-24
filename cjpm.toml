@@ -1,0 +1,28 @@
+[package]
+  cjc-version = "1.0.4"
+  name = "commons_lang4cj"
+  description = "仓颉版本的 Apache Commons Lang 工具库"
+  version = "1.2.0"
+  license = "Apache-2.0"
+  authors = ["XuShaoYang <mumu_xsy>"]
+  homepage = "https://github.com/mumu-xsy/commons-lang4cj"
+  repository = "https://github.com/mumu-xsy/commons-lang4cj"
+  target-dir = ""
+  src-dir = "src"
+  test-dir = "src"
+  output-type = "static"
+  compile-option = "-Woff unused"
+  override-compile-option = ""
+  link-option = ""
+  package-configuration = {}
+
+[dependencies]
+
+[dev-dependencies]
+  std = "1.0.4"
+  unittest = "1.0.4"
+
+[[product]]
+  name = "debug_word"
+  output-type = "executable"
+  main = "debug_word_utils.cj"

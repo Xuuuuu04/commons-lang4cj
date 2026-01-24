@@ -1,0 +1,53 @@
+# 构建产物
+target/
+*.o
+*.exe
+*.dll
+*.so
+*.dylib
+
+# 文档草稿
+*.md.backup
+ANALYSIS_SUMMARY.md
+COMPARISON.md
+DETAILED_COMPARISON.md
+ARCHITECTURE_ANALYSIS.md
+FINAL_REPORT.md
+
+# 参考文档（保留最终文档）
+# cangJie_docs/
+
+# 原始项目（用于参考）
+commons-lang/
+
+# 私有配置
+.claude/
+.spec-workflow/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# 操作系统
+.DS_Store
+Thumbs.db
+
+# 编译缓存
+.cache/
+.history/
+cjpm.lock
+
+# 仓颉编译器临时文件
+*.macrocall
+
+# 临时备份文件
+*.bak
+*.backup
+*.disabled
+*.old
+
+# 测试报告
+test-reports/
