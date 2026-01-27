@@ -85,7 +85,11 @@ class CharRangeTest {
     @TestCase
     func testFromString() {
         let result = CharRange.fromString("a-z")
-        @Expect(match (result) { case Some(range) => range.getMinimum() == r'a' && range.getMaximum() == r'z'; case None => false }, true)
+        let ok = match (result) {
+            case Some(range) => range.getMinimum() == r'a' && range.getMaximum() == r'z'
+            case None => false
+        }
+        @Expect(ok, true)
     }
 
     /**

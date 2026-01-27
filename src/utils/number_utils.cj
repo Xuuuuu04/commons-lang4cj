@@ -60,11 +60,7 @@ public class NumberUtils {
         if (str.size == 0) {
             return None
         }
-        try {
-            return Some(Int64.parse(str))
-        } catch (_: Exception) {
-            return None
-        }
+        Int64.tryParse(str)
     }
 
     /**
@@ -104,11 +100,7 @@ public class NumberUtils {
         if (str.size == 0) {
             return None
         }
-        try {
-            return Some(Int64.parse(str))
-        } catch (_: Exception) {
-            return None
-        }
+        Int64.tryParse(str)
     }
 
     /**
@@ -127,11 +119,7 @@ public class NumberUtils {
         if (str.size == 0) {
             return None
         }
-        try {
-            return Some(Float64.parse(str))
-        } catch (_: Exception) {
-            return None
-        }
+        Float64.tryParse(str)
     }
 
     /**

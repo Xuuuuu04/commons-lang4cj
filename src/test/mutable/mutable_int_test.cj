@@ -64,7 +64,7 @@ class MutableIntTest {
         try {
             let _ = MutableInt("abc")
             @Expect(false, true)  // 不应该到达这里
-        } catch (e: IAE) {
+        } catch (e: IllegalArgumentException) {
             @Expect(true, true)  // 期望抛出异常
         }
     }

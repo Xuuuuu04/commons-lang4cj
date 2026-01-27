@@ -51,3 +51,6 @@ cjpm.lock
 
 # 测试报告
 test-reports/
+
+# 本地临时测试日志
+.tmp_cjpm_test*.log

@@ -36,3 +36,9 @@ public import commons_lang4cj.concurrent.*
 public import commons_lang4cj.enums.*
 public import commons_lang4cj.reflect.*
 public import commons_lang4cj.function.*
+public import commons_lang4cj.arch.*
+public import commons_lang4cj.compare.*
+public import commons_lang4cj.event.*
+public import commons_lang4cj.stream.*
+public import commons_lang4cj.util.*
+public import commons_lang4cj.text.translate.*

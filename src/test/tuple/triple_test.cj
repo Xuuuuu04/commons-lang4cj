@@ -289,11 +289,12 @@ class TripleTest {
      */
     @TestCase
     func testWithLeftAndMiddleChained() {
-        let triple = Triple(1, 2, 3)
-        let newTriple = triple.withLeft(10).withMiddle(20)
-        @Expect(newTriple.getLeft(), 10)
-        @Expect(newTriple.getMiddle(), 20)
-        @Expect(newTriple.getRight(), 3)
+        let triple = Triple(1i64, 2i64, 3i64)
+        let t1 = triple.withLeft(10i64)
+        let newTriple = t1.withMiddle(20i64)
+        @Expect(newTriple.getLeft(), 10i64)
+        @Expect(newTriple.getMiddle(), 20i64)
+        @Expect(newTriple.getRight(), 3i64)
     }
 
     /**
@@ -301,11 +302,13 @@ class TripleTest {
      */
     @TestCase
     func testWithAllChained() {
-        let triple = Triple(1, 2, 3)
-        let newTriple = triple.withLeft(10).withMiddle(20).withRight(30)
-        @Expect(newTriple.getLeft(), 10)
-        @Expect(newTriple.getMiddle(), 20)
-        @Expect(newTriple.getRight(), 30)
+        let triple = Triple(1i64, 2i64, 3i64)
+        let t1 = triple.withLeft(10i64)
+        let t2 = t1.withMiddle(20i64)
+        let newTriple = t2.withRight(30i64)
+        @Expect(newTriple.getLeft(), 10i64)
+        @Expect(newTriple.getMiddle(), 20i64)
+        @Expect(newTriple.getRight(), 30i64)
     }
 
     /**
@@ -313,21 +316,23 @@ class TripleTest {
      */
     @TestCase
     func testImmutability() {
-        let triple = Triple(1, 2, 3)
+        let triple = Triple(1i64, 2i64, 3i64)
         let originalLeft = triple.getLeft()
         let originalMiddle = triple.getMiddle()
         let originalRight = triple.getRight()
 
         // with 方法创建新对象
-        let newTriple = triple.withLeft(10).withMiddle(20).withRight(30)
+        let t1 = triple.withLeft(10i64)
+        let t2 = t1.withMiddle(20i64)
+        let newTriple = t2.withRight(30i64)
 
         // 原对象不变
         @Expect(triple.getLeft(), originalLeft)
         @Expect(triple.getMiddle(), originalMiddle)
         @Expect(triple.getRight(), originalRight)
-        @Expect(triple.getLeft(), 1)
-        @Expect(triple.getMiddle(), 2)
-        @Expect(triple.getRight(), 3)
+        @Expect(triple.getLeft(), 1i64)
+        @Expect(triple.getMiddle(), 2i64)
+        @Expect(triple.getRight(), 3i64)
     }
 
     /**

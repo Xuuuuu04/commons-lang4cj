@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-01-27
+
+### Changed
+- 文档结构收敛：`doc/` 保留 API 总览与迁移相关文档，去除重复/易漂移的长篇 API 复述
+- README 与 doc 内容对齐当前版本（以 cjpm.toml 与迁移报告为准）
+
+### Fixed
+- 修复若干 CJ 语法/API 兼容问题，保证全库可编译并通过全量测试
+
 ## [1.1.0] - 2026-01-19
 
 ### Added

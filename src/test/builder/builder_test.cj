@@ -11,16 +11,17 @@ public class Box {
     }
 }
 
+class BoxBuilder <: Builder<Box> {
+    public func build(): Box {
+        Box(42)
+    }
+}
+
 @Test
 class BuilderTest {
     @TestCase
     func testBuilderInterface() {
-        let b = object : Builder<Box> {
-            public func build(): Box {
-                Box(42)
-            }
-        }
+        let b = BoxBuilder()
         @Expect(b.build().value, 42)
     }
 }
-
