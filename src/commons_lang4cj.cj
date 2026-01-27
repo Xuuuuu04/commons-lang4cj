@@ -12,7 +12,6 @@ package commons_lang4cj
  * - 布尔操作（BooleanUtils）
  * - 数组操作（ArrayUtils）
  * - 系统属性（SystemUtils）
- * - 序列化（SerializationUtils）
  * - 类型检查（ClassUtils）
  *
  * @since 1.0.0
@@ -33,3 +32,7 @@ public import commons_lang4cj.text.*
 public import commons_lang4cj.system.*
 public import commons_lang4cj.random.*
 public import commons_lang4cj.extension.*
+public import commons_lang4cj.concurrent.*
+public import commons_lang4cj.enums.*
+public import commons_lang4cj.reflect.*
+public import commons_lang4cj.function.*

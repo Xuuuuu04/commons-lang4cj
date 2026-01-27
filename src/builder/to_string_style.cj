@@ -629,7 +629,15 @@ public abstract class ToStringStyle {
      * 追加对象详情
      */
     protected open func appendDetail(buffer: StringBuilder, _: Option<String>, obj: ToStringObject): Unit {
+        let key = ToStringRegistry.keyOf(obj)
+        if (ToStringRegistry.isRegistered(key)) {
+            appendSummary(buffer, None, obj)
+            return
+        }
+
+        ToStringRegistry.register(key)
         buffer.append(obj.toString())
+        ToStringRegistry.unregister(key)
     }
 
     /**

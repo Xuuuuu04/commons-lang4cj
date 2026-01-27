@@ -104,6 +104,15 @@ class StringUtilsTest {
         @Expect(result1[1], "b")
         @Expect(result1[2], "c")
 
+        let result1Max2 = StringUtils.split("a,b,c", ",", 2)
+        @Expect(result1Max2.size, 2)
+        @Expect(result1Max2[0], "a")
+        @Expect(result1Max2[1], "b,c")
+
+        let result1Max1 = StringUtils.split("a,b,c", ",", 1)
+        @Expect(result1Max1.size, 1)
+        @Expect(result1Max1[0], "a,b,c")
+
         // 空元素
         let result2 = StringUtils.split("a,,b", ",")
         @Expect(result2.size, 3)

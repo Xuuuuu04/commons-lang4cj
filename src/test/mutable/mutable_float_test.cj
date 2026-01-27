@@ -3,7 +3,6 @@ package commons_lang4cj.test.mutable
 import std.unittest.*
 import std.unittest.testmacro.*
 import commons_lang4cj.mutable.*
-import commons_lang4cj.mutable.IllegalArgumentException as IAE
 
 
 /**
@@ -304,6 +303,15 @@ class MutableFloatTest {
         @Expect(mutableFloat.isInfinite(), false)
     }
 
+    @TestCase
+    public func testIsInfiniteTrue() {
+        let posInf = MutableFloat(Float32.Inf)
+        @Expect(posInf.isInfinite(), true)
+
+        let negInf = MutableFloat(-Float32.Inf)
+        @Expect(negInf.isInfinite(), true)
+    }
+
     /**
      * 测试 isNaN 方法
      */
@@ -311,6 +319,18 @@ class MutableFloatTest {
     public func testNaN() {
         let mutableFloat = MutableFloat(Float32.NaN)
         @Expect(mutableFloat.isNaN(), true)
+    }
+
+    @TestCase
+    public func testZeroSignEqualsHashAndCompare() {
+        let posZero = MutableFloat(0.0f32)
+        let negZero = MutableFloat(-0.0f32)
+
+        @Expect(posZero.equals(Some(negZero)), false)
+        @Expect(negZero.equals(Some(posZero)), false)
+        @Expect(posZero.hashCode() != negZero.hashCode(), true)
+        @Expect(negZero.compareTo(posZero), -1)
+        @Expect(posZero.compareTo(negZero), 1)
     }
 
     /**

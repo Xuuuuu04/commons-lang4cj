@@ -17,6 +17,8 @@
 
 package commons_lang4cj.builder
 
+import std.reflect.*
+
 /**
  * ToStringObject 的通用包装器
  *
@@ -40,16 +42,21 @@ public open class ToStringObjectWrapper<T> <: ToStringObject where T <: ToString
      * 获取类名
      */
     public func getClassName(): String {
-        // 简化实现：返回固定类名
-        "ToStringObjectWrapper"
+        try {
+            TypeInfo.of(_value).name
+        } catch (e: Exception) {
+            "Unknown"
+        }
     }
 
     /**
      * 获取身份哈希码
      */
     public func getIdentityHashCode(): UInt64 {
-        // 简化实现：使用对象地址的模拟
-        0u64
+        match (_value as Hashable) {
+            case Some(h) => UInt64(h.hashCode())
+            case None => 0u64
+        }
     }
 
     /**
@@ -102,9 +109,7 @@ public class StringToStringObject <: ToStringObject {
     }
 
     public func getIdentityHashCode(): UInt64 {
-        // 简化实现：返回固定值或基于长度的哈希
-        // 实际项目中应该使用更复杂的哈希算法
-        42u64  // 占位符哈希值
+        UInt64(_value.hashCode())
     }
 
     public func toString(): String {

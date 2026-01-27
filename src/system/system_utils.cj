@@ -63,8 +63,11 @@ public class SystemUtils {
      * @return Option<String> 临时目录路径
      */
     public static func getJavaIoTmpDir(): Option<String> {
-        // TODO: Fix getEnv issue or find correct API for environment variables
-        None
+        try {
+            Some(getTempDirectory().toString())
+        } catch (e: Exception) {
+            None
+        }
     }
 
     /**

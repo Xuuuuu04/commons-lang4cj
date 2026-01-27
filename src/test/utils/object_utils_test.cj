@@ -384,6 +384,21 @@ class ObjectUtilsTest {
     }
 
     @TestCase
+    func testIsNumberAny() {
+        let n1: Option<Any> = 42
+        let n2: Option<Any> = 3.14
+        let n3: Option<Any> = 1.0f32
+        let s: Option<Any> = "x"
+        let noneVal: Option<Any> = None
+
+        @Expect(ObjectUtils.isNumber(n1), true)
+        @Expect(ObjectUtils.isNumber(n2), true)
+        @Expect(ObjectUtils.isNumber(n3), true)
+        @Expect(ObjectUtils.isNumber(s), false)
+        @Expect(ObjectUtils.isNumber(noneVal), false)
+    }
+
+    @TestCase
     func testRequireNonNull() {
         // Some 值返回值本身
         let val: Option<Int64> = Some(42)
@@ -460,11 +475,13 @@ class ObjectUtilsTest {
 
     @TestCase
     func testIsArray() {
-        let val: Option<Int64> = Some(42)
-        let noneVal: Option<Int64> = None
+        let notArray: Option<Any> = 42
+        @Expect(ObjectUtils.isArray(notArray), false)
 
-        // 简化实现：Some 返回 true，None 返回 false
-        @Expect(ObjectUtils.isArray(val), true)
+        let arrVal: Option<Any> = [1, 2, 3]
+        @Expect(ObjectUtils.isArray(arrVal), true)
+
+        let noneVal: Option<Any> = None
         @Expect(ObjectUtils.isArray(noneVal), false)
     }
 

@@ -229,6 +229,23 @@ class ValidateUtilsTest {
     }
 
     @TestCase
+    func testBetweenErrorMessageFormatting() {
+        try {
+            ValidateUtils.exclusiveBetween(5, 10, 5)
+            @Expect(false, true)
+        } catch (e: IllegalArgumentException) {
+            @Expect(e.message, "The value 5 is not in the specified exclusive range of 5 to 10")
+        }
+
+        try {
+            ValidateUtils.inclusiveBetween(5, 10, 11)
+            @Expect(false, true)
+        } catch (e: IllegalArgumentException) {
+            @Expect(e.message, "The value 11 is not in the specified inclusive range of 5 to 10")
+        }
+    }
+
+    @TestCase
     func testInclusiveBetween() {
         // 在范围内（包含边界）
         ValidateUtils.inclusiveBetween(5, 10, 5)

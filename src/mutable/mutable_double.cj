@@ -123,6 +123,18 @@ public open class MutableDouble <: Number {
         } else if (_value > other._value) {
             1
         } else {
+            compareSignedBits(toLongBits(_value), toLongBits(other._value))
+        }
+    }
+
+    private func compareSignedBits(a: UInt64, b: UInt64): Int64 {
+        let aa = a ^ 0x8000000000000000u64
+        let bb = b ^ 0x8000000000000000u64
+        if (aa < bb) {
+            -1
+        } else if (aa > bb) {
+            1
+        } else {
             0
         }
     }
@@ -180,52 +192,18 @@ public open class MutableDouble <: Number {
      * 使用位比较，与 Java 的 Double.doubleToLongBits 一致
      */
     private func isEqualToMutableDouble(mutableDouble: MutableDouble): Bool {
-        // 使用位比较，与 Java 的 Double.doubleToLongBits 一致
-        // NaN == NaN 为 true
-        // +0.0 != -0.0
-        if (_value.isNaN() && mutableDouble._value.isNaN()) {
-            true
-        } else if (_value == mutableDouble._value) {
-            // 检查符号位是否一致（区分 +0.0 和 -0.0）
-            let thisBits = getRawBits(_value)
-            let otherBits = getRawBits(mutableDouble._value)
-            thisBits == otherBits
-        } else {
-            false
-        }
+        toLongBits(_value) == toLongBits(mutableDouble._value)
     }
 
     /**
      * 获取 Float64 的原始位表示（模拟 Java 的 Double.doubleToLongBits）
      * 用于 equals 和 hashCode 方法
      */
-    private func getRawBits(value: Float64): UInt64 {
-        // 使用 Float64 的位表示
-        // 在仓颉中，我们使用值的字符串比较来模拟位比较
+    private func toLongBits(value: Float64): UInt64 {
         if (value.isNaN()) {
-            0x7FF8000000000000u64  // 标准 NaN 的位模式
-        } else if (value == 0.0) {
-            // 区分 +0.0 和 -0.0
-            if (1.0 / value > 0.0) {
-                0u64  // +0.0
-            } else {
-                0x8000000000000000u64  // -0.0
-            }
-        } else if (value > 1e308) {
-            // 检查是否为正无穷
-            0x7FF0000000000000u64  // +Infinity
-        } else if (value < -1e308) {
-            // 检查是否为负无穷
-            0xFFF0000000000000u64  // -Infinity
+            0x7FF8000000000000u64
         } else {
-            // 对于正常数值，使用值本身的哈希
-            // 这是一个简化实现，实际应用中需要更精确的位转换
-            let intValue = Int64(value)
-            if (intValue < 0) {
-                UInt64(-intValue)
-            } else {
-                UInt64(intValue)
-            }
+            value.toBits()
         }
     }
 
@@ -297,7 +275,7 @@ public open class MutableDouble <: Number {
     public func hashCode(): Int64 {
         // 模拟 Java 的 Double.hashCode()
         // bits ^ (bits >>> 32)
-        let bits = getRawBits(_value)
+        let bits = toLongBits(_value)
         let high = Int64(bits >> 32)
         let low = Int64(bits & 0xFFFFFFFFu64)
         high ^ low
@@ -330,8 +308,7 @@ public open class MutableDouble <: Number {
      * @return true 如果是无穷大
      */
     public func isInfinite(): Bool {
-        // 检查是否为正无穷或负无穷
-        _value > 1e308 || _value < -1e308
+        _value.isInf()
     }
 
     /**

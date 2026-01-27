@@ -580,12 +580,7 @@ public class CharUtils {
      * ```
      */
     public static func toStrings(str: String): Array<Rune> {
-        if (str.size == 0) {
-            return Array<Rune>()
-        }
-        // 简化实现：返回空数组
-        // TODO: 实现完整的字符串到字符数组转换
-        Array<Rune>()
+        str.toRuneArray()
     }
 
     // ========== 3. 比较操作方法 ==========

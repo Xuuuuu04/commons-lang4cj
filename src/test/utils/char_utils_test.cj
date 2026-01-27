@@ -271,8 +271,12 @@ class CharUtilsTest {
 
     @TestCase
     func testToStrings() {
-        // 简化实现：返回空数组
-        @Expect(CharUtils.toStrings("ABC").size, 0)
+        let chars1 = CharUtils.toStrings("ABC")
+        @Expect(chars1.size, 3)
+        @Expect(chars1[0], r'A')
+        @Expect(chars1[1], r'B')
+        @Expect(chars1[2], r'C')
+
         @Expect(CharUtils.toStrings("").size, 0)
     }
 

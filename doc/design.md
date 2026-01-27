@@ -90,9 +90,9 @@ public class StringUtils {
 ```
 
 **设计限制**：
-- `split` 方法的 `maxSplit` 参数未完全实现，当前行为与标准 split 一致
+- `split` 的 `maxSplit` 约定为 0 表示无限制（与标准库 split 的 maxSplits=0 行为不同）
 - 仅支持 ASCII 字符的大小写转换，不支持 Unicode 完整处理
-- `toStrings` 方法返回空数组（待完善）
+- `toStrings` 返回 Rune 数组（基于标准库 String.toRuneArray）
 
 #### ArrayUtils 类设计
 
@@ -199,7 +199,7 @@ public class ObjectUtils {
 ```
 
 **设计限制**：
-- 运行时类型信息受限，`getTypeName` 返回固定值
+- 运行时类型信息不如 Java 丰富，但可通过 std.reflect.TypeInfo 获取类型限定名；函数/元组/enum 等类型的运行时类型信息目前受限
 - 使用 Option<T> 而不是 null，与 Java 原生 API 不完全兼容
 
 ### 2. builder 包 - 构建器模式
@@ -987,7 +987,7 @@ main() {
 
 **静态类型系统**：
 - 仓颉是强类型静态语言，某些动态特性（如反射）功能受限
-- 运行时类型信息不如 Java 丰富，`getTypeName` 等方法返回固定值
+- 运行时类型信息不如 Java 丰富，但可通过 std.reflect.TypeInfo 获取类型限定名；函数/元组/enum 等类型的运行时类型信息目前受限
 
 **数组不可变性**：
 - `Array<T>` 长度不可变，所有修改操作返回新数组，性能开销较大
@@ -1000,9 +1000,9 @@ main() {
 ### 2. 功能实现限制
 
 **StringUtils**：
-- `split` 方法的 `maxSplit` 参数未完全实现
+- `split` 的 `maxSplit` 约定为 0 表示无限制（与标准库 split 的 maxSplits=0 行为不同）
 - 仅支持 ASCII 字符大小写转换，不支持 Unicode 完整处理
-- `toStrings` 方法返回空数组（待完善）
+- `toStrings` 返回 Rune 数组（基于标准库 String.toRuneArray）
 
 **ArrayUtils**：
 - 不支持多维数组操作

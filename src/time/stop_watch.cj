@@ -81,20 +81,7 @@ public class StopWatch {
         _started = true
         _stopped = false
 
-        // 缓存开始时间戳（用于 getStartTime() 方法）
-        let now = DateTime.now()
-        // 计算当前时间的 Unix 时间戳（从 1970-01-01 到现在的毫秒数）
-        let year = now.year
-        let day = now.dayOfMonth
-        let hour = now.hour
-        let minute = now.minute
-        let second = now.second
-        let nano = now.nanosecond
-
-        // 简化计算：返回一个估算的时间戳
-        // 注意：这是近似值，仅供参考
-        // 实际应用中，MonoTime 无法转换为绝对时间戳
-        _startTimestamp = Some((year * 31536000000) + (day * 86400000) + (hour * 3600000) + (minute * 60000) + (second * 1000) + (nano / 1000000))
+        _startTimestamp = Some(DateTime.now().toUnixTimeStamp().toMilliseconds())
     }
 
     /**
@@ -278,9 +265,6 @@ public class StopWatch {
 
     /**
      * 获取开始时间戳（毫秒，从 UnixEpoch 计算）
-     *
-     * 注意：MonoTime 是相对时间，无法直接转换为 Unix 时间戳
-     * 这里返回一个估算值（用于日志记录），仅供参考
      *
      * @return 开始时间戳（毫秒）
      * @throws IllegalStateException 如果未启动

@@ -843,75 +843,29 @@ public class ValidateUtils {
      * @param args 参数列表
      * @return 格式化后的字符串
      */
-    private static func formatString(format: String, args: Array<Int64>): String {
-        // 简化的字符串格式化实现
-        var result = format
-        var index = 0
-        for (arg in args) {
-            let placeholder = "%d"
-            let pos = indexOf(result, placeholder)
-            if (pos >= 0 && index < args.size) {
-                let before = substring(result, 0, pos)
-                let after = substring(result, pos + 2, result.size)
-                result = before + arg.toString() + after
-            }
-            index++
-        }
-        result
-    }
-
-    /**
-     * 查找子字符串位置
-     *
-     * @param str 字符串
-     * @param sub 子字符串
-     * @return 位置，未找到返回 -1
-     */
-    private static func indexOf(str: String, sub: String): Int64 {
-        if (sub.size == 0) {
-            return 0
-        }
-        if (str.size < sub.size) {
-            return -1
-        }
-        for (i in 0..(str.size - sub.size + 1)) {
-            let subStr = substring(str, i, i + sub.size)
-            if (subStr == sub) {
-                return i
+    private static func formatString<T>(format: String, args: Array<T>): String where T <: ToString {
+        let sb = StringBuilder()
+        var argIndex = 0
+        var i: Int64 = 0
+        while (i < format.size) {
+            if (format[i] == 37u8 && i + 1 < format.size) {
+                let spec = format[i + 1]
+                if (spec == 37u8) {
+                    sb.append("%")
+                } else {
+                    if (argIndex < args.size) {
+                        sb.append(args[argIndex].toString())
+                        argIndex++
+                    } else {
+                        sb.append(format[i..(i + 2)])
+                    }
+                }
+                i += 2
+            } else {
+                sb.append(format[i..(i + 1)])
+                i++
             }
         }
-        -1
-    }
-
-    /**
-     * 截取子字符串
-     *
-     * @param str 字符串
-     * @param start 起始位置
-     * @param end 结束位置
-     * @return 子字符串
-     */
-    private static func substring(str: String, start: Int64, end: Int64): String {
-        if (start >= end) {
-            return ""
-        }
-        if (start >= str.size) {
-            return ""
-        }
-        if (end > str.size) {
-            return substring(str, start, str.size)
-        }
-        var result = ""
-        var count = 0
-        for (ch in str) {
-            if (count >= start && count < end) {
-                result += String.fromUtf8([ch])
-            }
-            count++
-            if (count >= end) {
-                break
-            }
-        }
-        result
+        sb.toString()
     }
 }

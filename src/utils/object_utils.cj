@@ -1,6 +1,7 @@
 package commons_lang4cj.utils
 
 import std.convert.*
+import std.reflect.*
 
 /**
  * ObjectUtils 对象工具类
@@ -339,8 +340,10 @@ public class ObjectUtils {
      */
     private static func buildIdentityString<T>(v: T): String where T <: ToString {
         let typeName = getTypeName(v)
-        // 使用对象本身的字符串表示作为哈希码的简化版本
-        let hashCode = v.toString().size  // 使用字符串长度作为伪哈希
+        let hashCode = match (v as Hashable) {
+            case Some(h) => h.hashCode()
+            case None => 0
+        }
         let hexHash = toHexString(hashCode)
         "${typeName}@${hexHash}"
     }
@@ -352,8 +355,40 @@ public class ObjectUtils {
      * @return 十六进制字符串
      */
     private static func toHexString(value: Int64): String {
-        // 简化实现：只返回十进制字符串
-        value.toString()
+        var u: UInt64
+        if (value == -0x8000_0000_0000_0000) {
+            u = 0x8000_0000_0000_0000u64
+        } else {
+            let absValue = if (value < 0) { -value } else { value }
+            u = UInt64(absValue)
+        }
+        if (u == 0u64) {
+            return "0"
+        }
+
+        let sb = StringBuilder(16)
+        var shift: Int64 = 60
+        var started = false
+        while (shift >= 0) {
+            let nibble = (u >> UInt64(shift)) & 0xFu64
+            if (!started) {
+                if (nibble == 0u64) {
+                    shift -= 4
+                    continue
+                }
+                started = true
+            }
+
+            let ascii = if (nibble < 10u64) {
+                UInt32(48u8 + UInt8(nibble))
+            } else {
+                UInt32(87u8 + UInt8(nibble))
+            }
+            sb.append(Rune(ascii))
+            shift -= 4
+        }
+
+        sb.toString()
     }
 
     // ========== Phase 6: 克隆与数组检查 ==========
@@ -438,10 +473,12 @@ public class ObjectUtils {
      * @param _ 对象（未使用，保留用于类型推断）
      * @return 类型名称
      */
-    private static func getTypeName<T>(_: T): String {
-        // 根据类型参数返回类型名
-        // 注意：仓颉 1.0.4 不支持运行时类型信息，这里返回固定类型名
-        "Object"
+    private static func getTypeName<T>(value: T): String {
+        try {
+            TypeInfo.of(value).name
+        } catch (e: Exception) {
+            "Object"
+        }
     }
 
     // ========== Phase 7: 额外实用方法 ==========
@@ -563,6 +600,26 @@ public class ObjectUtils {
      */
     public static func isNumber(obj: Option<Int64>): Bool {
         isInt64(obj)
+    }
+
+    public static func isNumber(obj: Option<Any>): Bool {
+        match (obj) {
+            case None => false
+            case Some(v) =>
+                (v as Int8).isSome() ||
+                (v as Int16).isSome() ||
+                (v as Int32).isSome() ||
+                (v as Int64).isSome() ||
+                (v as IntNative).isSome() ||
+                (v as UInt8).isSome() ||
+                (v as UInt16).isSome() ||
+                (v as UInt32).isSome() ||
+                (v as UInt64).isSome() ||
+                (v as UIntNative).isSome() ||
+                (v as Float16).isSome() ||
+                (v as Float32).isSome() ||
+                (v as Float64).isSome()
+        }
     }
 
     /**
@@ -689,9 +746,15 @@ public class ObjectUtils {
      * @param obj 待检查的对象
      * @return 如果是数组返回 true
      */
-    public static func isArray<T>(obj: Option<T>): Bool {
+    public static func isArray(obj: Option<Any>): Bool {
         match (obj) {
-            case Some(_) => true  // 简化实现
+            case Some(v) =>
+                try {
+                    let ty = TypeInfo.of(v)
+                    ty.name == "Array" || ty.name == "VArray" || ty.qualifiedName.contains("Array")
+                } catch (e: Exception) {
+                    false
+                }
             case _ => false
         }
     }

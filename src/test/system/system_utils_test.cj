@@ -33,6 +33,12 @@ class SystemUtilsTest {
     }
 
     @TestCase
+    func testGetJavaIoTmpDir() {
+        let tmp = SystemUtils.getJavaIoTmpDir()
+        @Expect(tmp.isSome())
+    }
+
+    @TestCase
     func testLineSeparator() {
         let sep = SystemUtils.LINE_SEPARATOR
         @Expect(sep.size > 0)

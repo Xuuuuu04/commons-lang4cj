@@ -3,9 +3,7 @@ package commons_lang4cj.range
 import std.collection.*
 
 /**
- * 字符范围类 - 简化实现
- *
- * 这是一个临时的占位实现，完整实现需要等到仓颉支持必要的 API
+ * 字符范围类
  *
  * @since 1.0.0
  */
@@ -39,8 +37,14 @@ public open class CharRange {
     /**
      * 从字符串创建字符范围
      */
-    public static func fromString(_: String): Option<CharRange> {
-        // 简化实现：暂时返回 None
+    public static func fromString(str: String): Option<CharRange> {
+        let runes = str.toRuneArray()
+        if (runes.size == 1) {
+            return Some(CharRange.`is`(runes[0]))
+        }
+        if (runes.size == 3 && runes[1] == r'-') {
+            return Some(CharRange.of(runes[0], runes[2]))
+        }
         None
     }
 
@@ -62,21 +66,35 @@ public open class CharRange {
      * 获取范围内的所有字符
      */
     public func getChars(): Array<Rune> {
-        Array<Rune>(0, { _ => r'\0' })
+        let chars = ArrayList<Rune>()
+        var code = UInt32(_min)
+        let end = UInt32(_max)
+        while (code <= end) {
+            chars.add(Rune(code))
+            code++
+        }
+        chars.toArray()
     }
 
     /**
      * 转换为 ArrayList
      */
     public func toArrayList(): ArrayList<Rune> {
-        ArrayList<Rune>()
+        let list = ArrayList<Rune>()
+        var code = UInt32(_min)
+        let end = UInt32(_max)
+        while (code <= end) {
+            list.add(Rune(code))
+            code++
+        }
+        list
     }
 
     /**
      * 获取字符数量
      */
     public func getSize(): Int64 {
-        0
+        Int64(UInt32(_max)) - Int64(UInt32(_min)) + 1
     }
 
     /**

@@ -518,7 +518,7 @@ main() {
 ### 功能实现限制
 
 **StringUtils**：
-- `split` 方法的 `maxSplit` 参数未完全实现
+- `split` 的 `maxSplit` 约定为 0 表示无限制（与标准库 split 的 maxSplits=0 行为不同）
 - 仅支持 ASCII 字符大小写转换，不支持 Unicode 完整处理
 
 **ArrayUtils**：

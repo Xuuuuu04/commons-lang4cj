@@ -1,6 +1,7 @@
 package commons_lang4cj.reflect
 
 import commons_lang4cj.utils.StringUtils
+import std.reflect.*
 
 /**
  * ClassUtils
@@ -131,25 +132,11 @@ public class ClassUtils {
         return cleanClassName[0..lastDotIdx]
     }
 
-    // 辅助获取类名，目前仓颉可能需要特定方式
-    // 假设 Object 有 toString 或者通过反射
-    // 注意：仓颉 0.53+ 版本可能有 Refelect 模块
-    // 暂时返回 toString() 的一部分或者使用 hack，如果无法获取真实类名。
-    // 更好的方式是使用 import std.reflect.* 和 TypeInfo
-    private static func getClassName(_: Object): String {
-        // 尝试使用 Object.getClass().name 类似的机制
-        // 目前仓颉标准库中，可以使用 TypeInfo.of(obj) 如果 obj 是 Any
-        // 但是这里 obj 是 Object。
-        // 暂时返回 obj.toString() 如果它包含类名，或者返回空字符串
-        // 实际上，用户传进来的通常是 String 类型的类名。
-        // 如果是 Object，我们期望它能被反射。
-        // 鉴于反射支持可能受限，我们尽量做字符串处理。
-        // 如果真的要获取运行时类名，需要 import std.reflect.*
-
-        // 这是一个占位实现，直到反射 API 稳定
-        // 如果用户传入的是 Class 对象（如果有），那就不同了。
-        // 现在的实现主要服务于 StringUtilsTest 中可能用到的类名处理
-
-        return "" // TODO: 使用 std.reflect 获取真实类名
+    private static func getClassName(obj: Any): String {
+        try {
+            TypeInfo.of(obj).qualifiedName
+        } catch (e: Exception) {
+            ""
+        }
     }
 }

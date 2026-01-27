@@ -8,8 +8,8 @@ commons-lang4cj 是 Apache Commons Lang 的仓颉（Cangjie）语言移植版本
 
 commons-lang4cj 库当前提供以下主要模块：
 
-1. **核心工具 (utils)**: `StringUtils`, `ArrayUtils`, `ObjectUtils`, `NumberUtils`, `BooleanUtils`, `CharUtils`, `ValidateUtils`
-2. **构建器 (builder)**: `EqualsBuilder`, `HashCodeBuilder`, `ToStringBuilder`, `CompareToBuilder`
+1. **核心工具 (utils)**: `StringUtils`, `Strings`, `CharSequenceUtils`, `ArrayUtils`, `ArrayFill`, `ArraySorter`, `ObjectUtils`, `NumberUtils`, `BooleanUtils`, `CharUtils`, `ValidateUtils`, `CharEncoding`, `Charsets`, `CharSet`, `CharSetUtils`, `RegExUtils`, `BitField`, `AppendableJoiner`
+2. **构建器 (builder)**: `Builder<T>`, `EqualsBuilder`, `HashCodeBuilder`, `ToStringBuilder`, `CompareToBuilder`
 3. **可变包装 (mutable)**: `MutableInt`, `MutableLong`, `MutableDouble`, `MutableFloat`, `MutableByte`, `MutableShort`, `MutableBoolean`, `MutableObject<T>`
 4. **时间日期 (time)**: `StopWatch`, `DateFormatUtils`, `DurationFormatUtils`, `DateUtils`
 5. **数学计算 (math)**: `Fraction`, `IEEE754rUtils`
@@ -19,8 +19,9 @@ commons-lang4cj 库当前提供以下主要模块：
 9. **元组 (tuple)**: `Pair<K,V>`, `Triple<L,M,R>`
 10. **范围处理 (range)**: `Range<T>`, `NumberRange`, `CharRange`
 11. **枚举工具 (enums)**: `EnumUtils`
-12. **反射工具 (reflect)**: `ClassUtils`
+12. **反射工具 (reflect)**: `ClassUtils`, `InheritanceUtils`
 13. **系统工具 (system)**: `SystemUtils`
+14. **函数工具 (function)**: `TriFunction<A,B,C,R>`, `TriConsumer<A,B,C>`, `ToBooleanBiFunction<A,B>`
 
 ## Utils 包 API
 

@@ -204,7 +204,7 @@ public class StringUtils {
      * StringUtils.split("a,b,c", ",", 1)   // ["a,b,c"]
      * ```
      */
-    public static func split(str: String, separator: String, _: Int64): Array<String> {
+    public static func split(str: String, separator: String, maxSplit: Int64): Array<String> {
         if (isEmpty(str)) {
             return [EMPTY]
         }
@@ -213,9 +213,8 @@ public class StringUtils {
             return [str]
         }
 
-        // 使用标准库的 split
-        // TODO: 实现 maxSplit 参数支持
-        str.split(separator)
+        let effectiveMaxSplits = if (maxSplit == 0) { -1 } else { maxSplit }
+        str.split(separator, effectiveMaxSplits)
     }
 
     /**

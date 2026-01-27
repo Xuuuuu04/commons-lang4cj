@@ -84,14 +84,8 @@ class CharRangeTest {
      */
     @TestCase
     func testFromString() {
-        // 简化实现：暂时返回 None
         let result = CharRange.fromString("a-z")
-
-        // 使用模式匹配检查 Option
-        match (result) {
-            case Some(_) => @Expect(false, true) // 不应该到这里
-            case None => () // 预期结果
-        }
+        @Expect(match (result) { case Some(range) => range.getMinimum() == r'a' && range.getMaximum() == r'z'; case None => false }, true)
     }
 
     /**
@@ -115,7 +109,7 @@ class CharRangeTest {
     }
 
     /**
-     * 测试 getChars() 方法 - 简化实现返回空数组
+     * 测试 getChars() 方法
      */
     @TestCase
     func testGetChars() {
@@ -123,11 +117,13 @@ class CharRangeTest {
 
         let chars = range.getChars()
 
-        @Expect(chars.size, 0)
+        @Expect(chars.size, 26)
+        @Expect(chars[0], r'a')
+        @Expect(chars[25], r'z')
     }
 
     /**
-     * 测试 toArrayList() 方法 - 简化实现返回空列表
+     * 测试 toArrayList() 方法
      */
     @TestCase
     func testToArrayList() {
@@ -135,17 +131,19 @@ class CharRangeTest {
 
         let list = range.toArrayList()
 
-        @Expect(list.size, 0)
+        @Expect(list.size, 26)
+        @Expect(list[0], r'a')
+        @Expect(list[25], r'z')
     }
 
     /**
-     * 测试 getSize() 方法 - 简化实现返回 0
+     * 测试 getSize() 方法
      */
     @TestCase
     func testGetSize() {
         let range = CharRange.of(r'a', r'z')
 
-        @Expect(range.getSize(), 0)
+        @Expect(range.getSize(), 26)
     }
 
     /**

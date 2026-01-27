@@ -3,7 +3,6 @@ package commons_lang4cj.test.mutable
 import std.unittest.*
 import std.unittest.testmacro.*
 import commons_lang4cj.mutable.*
-import commons_lang4cj.mutable.IllegalArgumentException as IAE
 
 
 /**
@@ -313,6 +312,15 @@ class MutableDoubleTest {
         @Expect(mutableDouble.isInfinite(), false)
     }
 
+    @TestCase
+    public func testIsInfiniteTrue() {
+        let posInf = MutableDouble(Float64.Inf)
+        @Expect(posInf.isInfinite(), true)
+
+        let negInf = MutableDouble(-Float64.Inf)
+        @Expect(negInf.isInfinite(), true)
+    }
+
     /**
      * 测试 isNaN 方法
      */
@@ -320,6 +328,18 @@ class MutableDoubleTest {
     public func testNaN() {
         let mutableDouble = MutableDouble(Float64.NaN)
         @Expect(mutableDouble.isNaN(), true)
+    }
+
+    @TestCase
+    public func testZeroSignEqualsHashAndCompare() {
+        let posZero = MutableDouble(0.0)
+        let negZero = MutableDouble(-0.0)
+
+        @Expect(posZero.equals(Some(negZero)), false)
+        @Expect(negZero.equals(Some(posZero)), false)
+        @Expect(posZero.hashCode() != negZero.hashCode(), true)
+        @Expect(negZero.compareTo(posZero), -1)
+        @Expect(posZero.compareTo(negZero), 1)
     }
 
     /**

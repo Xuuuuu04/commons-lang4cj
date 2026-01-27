@@ -82,6 +82,8 @@ public open class ToStringBuilder {
      */
     protected var _style: ToStringStyle
 
+    private var _registryKey: Option<String> = None
+
     /**
      * 使用默认样式构建对象
      *
@@ -91,6 +93,11 @@ public open class ToStringBuilder {
         _object = object
         _style = getDefaultStyle()
         _buffer = StringBuilder(512)
+        if (let Some(obj) <- object) {
+            let key = ToStringRegistry.keyOf(obj)
+            ToStringRegistry.register(key)
+            _registryKey = Some(key)
+        }
         _style.appendStart(_buffer, object)
     }
 
@@ -104,6 +111,11 @@ public open class ToStringBuilder {
         _object = object
         _style = match (style) { case Some(s) => s case None => getDefaultStyle() }
         _buffer = StringBuilder(512)
+        if (let Some(obj) <- object) {
+            let key = ToStringRegistry.keyOf(obj)
+            ToStringRegistry.register(key)
+            _registryKey = Some(key)
+        }
         _style.appendStart(_buffer, object)
     }
 
@@ -118,6 +130,11 @@ public open class ToStringBuilder {
         _object = object
         _style = match (style) { case Some(s) => s case None => getDefaultStyle() }
         _buffer = match (buffer) { case Some(b) => b case None => StringBuilder(512) }
+        if (let Some(obj) <- object) {
+            let key = ToStringRegistry.keyOf(obj)
+            ToStringRegistry.register(key)
+            _registryKey = Some(key)
+        }
         _style.appendStart(_buffer, object)
     }
 
@@ -568,7 +585,12 @@ public open class ToStringBuilder {
             case None => _buffer.append(_style.getNullText())
             case Some(obj) => _style.appendEnd(_buffer, Some(obj))
         }
-        return _buffer.toString()
+        let result = _buffer.toString()
+        if (let Some(key) <- _registryKey) {
+            ToStringRegistry.unregister(key)
+            _registryKey = None
+        }
+        result
     }
 
     /**

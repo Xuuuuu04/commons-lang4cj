@@ -123,6 +123,18 @@ public open class MutableFloat <: Number {
         } else if (_value > other._value) {
             1
         } else {
+            compareSignedBits(toIntBits(_value), toIntBits(other._value))
+        }
+    }
+
+    private func compareSignedBits(a: UInt32, b: UInt32): Int64 {
+        let aa = a ^ 0x80000000u32
+        let bb = b ^ 0x80000000u32
+        if (aa < bb) {
+            -1
+        } else if (aa > bb) {
+            1
+        } else {
             0
         }
     }
@@ -180,52 +192,18 @@ public open class MutableFloat <: Number {
      * 使用位比较，与 Java 的 Float.floatToIntBits 一致
      */
     private func isEqualToMutableFloat(mutableFloat: MutableFloat): Bool {
-        // 使用位比较，与 Java 的 Float.floatToIntBits 一致
-        // NaN == NaN 为 true
-        // +0.0 != -0.0
-        if (_value.isNaN() && mutableFloat._value.isNaN()) {
-            true
-        } else if (_value == mutableFloat._value) {
-            // 检查符号位是否一致（区分 +0.0 和 -0.0）
-            let thisBits = getRawBits(_value)
-            let otherBits = getRawBits(mutableFloat._value)
-            thisBits == otherBits
-        } else {
-            false
-        }
+        toIntBits(_value) == toIntBits(mutableFloat._value)
     }
 
     /**
      * 获取 Float32 的原始位表示（模拟 Java 的 Float.floatToIntBits）
      * 用于 equals 和 hashCode 方法
      */
-    private func getRawBits(value: Float32): UInt32 {
-        // 使用 Float32 的位表示
-        // 在仓颉中，我们使用值的字符串比较来模拟位比较
+    private func toIntBits(value: Float32): UInt32 {
         if (value.isNaN()) {
-            0x7FC00000u32  // 标准 NaN 的位模式
-        } else if (value == 0.0) {
-            // 区分 +0.0 和 -0.0
-            if (1.0 / value > 0.0) {
-                0u32  // +0.0
-            } else {
-                0x80000000u32  // -0.0
-            }
-        } else if (value > 1e38) {
-            // 检查是否为正无穷
-            0x7F800000u32  // +Infinity
-        } else if (value < -1e38) {
-            // 检查是否为负无穷
-            0xFF800000u32  // -Infinity
+            0x7FC00000u32
         } else {
-            // 对于正常数值，使用值本身的哈希
-            // 这是一个简化实现，实际应用中需要更精确的位转换
-            let intValue = Int32(value)
-            if (intValue < 0) {
-                UInt32(-intValue)
-            } else {
-                UInt32(intValue)
-            }
+            value.toBits()
         }
     }
 
@@ -297,7 +275,7 @@ public open class MutableFloat <: Number {
     public func hashCode(): Int64 {
         // 模拟 Java 的 Float.hashCode()
         // floatToIntBits(value)
-        Int64(getRawBits(_value))
+        Int64(toIntBits(_value))
     }
 
     /**
@@ -327,8 +305,7 @@ public open class MutableFloat <: Number {
      * @return true 如果是无穷大
      */
     public func isInfinite(): Bool {
-        // 检查是否为正无穷或负无穷
-        _value > 1e38 || _value < -1e38
+        _value.isInf()
     }
 
     /**

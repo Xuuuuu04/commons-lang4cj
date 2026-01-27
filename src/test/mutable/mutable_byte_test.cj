@@ -37,6 +37,36 @@ class MutableByteTest {
         @Expect(mutableByte.getValue(), -50)
     }
 
+    @TestCase
+    public func testConstructorWithNumber() {
+        let mutableByte = MutableByte(MutableInt(12))
+        @Expect(mutableByte.getValue(), 12)
+    }
+
+    @TestCase
+    public func testConstructorFromStringValid() {
+        let mutableByte = MutableByte("123")
+        @Expect(mutableByte.getValue(), 123)
+    }
+
+    @TestCase
+    public func testConstructorFromStringInvalid() {
+        try {
+            let _ = MutableByte("abc")
+            @Expect(false, true)
+        } catch (e: IllegalArgumentException) {
+        }
+    }
+
+    @TestCase
+    public func testConstructorFromStringOutOfRange() {
+        try {
+            let _ = MutableByte("128")
+            @Expect(false, true)
+        } catch (e: IllegalArgumentException) {
+        }
+    }
+
     /**
      * 测试 getValue 方法
      */
@@ -56,6 +86,23 @@ class MutableByteTest {
         @Expect(mutableByte.getValue(), 20)
     }
 
+    @TestCase
+    public func testSetValueWithNumber() {
+        let mutableByte = MutableByte(10)
+        mutableByte.setValue(MutableInt(20))
+        @Expect(mutableByte.getValue(), 20)
+    }
+
+    @TestCase
+    public func testSetValueWithNumberOutOfRange() {
+        let mutableByte = MutableByte(10)
+        try {
+            mutableByte.setValue(MutableInt(128))
+            @Expect(false, true)
+        } catch (e: IllegalArgumentException) {
+        }
+    }
+
     /**
      * 测试 add 方法
      */
@@ -63,6 +110,29 @@ class MutableByteTest {
     public func testAdd() {
         let mutableByte = MutableByte(10)
         mutableByte.add(5)
+        @Expect(mutableByte.getValue(), 15)
+    }
+
+    @TestCase
+    public func testAddWithNumber() {
+        let mutableByte = MutableByte(10)
+        mutableByte.add(MutableInt(5))
+        @Expect(mutableByte.getValue(), 15)
+    }
+
+    @TestCase
+    public func testAddAndGet() {
+        let mutableByte = MutableByte(10)
+        let v = mutableByte.addAndGet(Int8(5))
+        @Expect(v, 15)
+        @Expect(mutableByte.getValue(), 15)
+    }
+
+    @TestCase
+    public func testGetAndAdd() {
+        let mutableByte = MutableByte(10)
+        let last = mutableByte.getAndAdd(Int8(5))
+        @Expect(last, 10)
         @Expect(mutableByte.getValue(), 15)
     }
 
@@ -142,14 +212,40 @@ class MutableByteTest {
     }
 
     /**
-     * 测试 equals - 简化实现返回 false
+     * 测试 equals
      */
     @TestCase
     public func testEquals() {
         let m1 = MutableByte(10)
         let m2 = MutableByte(10)
-        // 简化实现总是返回 false
-        @Expect(m1.equals(m2), false)
+        @Expect(m1.equals(m2), true)
+
+        let m3 = MutableByte(11)
+        @Expect(m1.equals(m3), false)
+    }
+
+    @TestCase
+    public func testEqualsOption() {
+        let m1 = MutableByte(10)
+        let m2 = MutableByte(10)
+        @Expect(m1.equals(Some(m2)), true)
+        @Expect(m1.equals(None), false)
+    }
+
+    @TestCase
+    public func testIncrementAndGetAndGetAndIncrement() {
+        let mutableByte = MutableByte(10)
+        @Expect(mutableByte.incrementAndGet(), 11)
+        @Expect(mutableByte.getAndIncrement(), 11)
+        @Expect(mutableByte.getValue(), 12)
+    }
+
+    @TestCase
+    public func testDecrementAndGetAndGetAndDecrement() {
+        let mutableByte = MutableByte(10)
+        @Expect(mutableByte.decrementAndGet(), 9)
+        @Expect(mutableByte.getAndDecrement(), 9)
+        @Expect(mutableByte.getValue(), 8)
     }
 
     /**

@@ -28,6 +28,14 @@ public class EnumUtilsTest {
     }
 
     @TestCase
+    public func testIsValidEnumIgnoreCase() {
+        @Expect(EnumUtils.isValidEnumIgnoreCase(colorMap, "red"), true)
+        @Expect(EnumUtils.isValidEnumIgnoreCase(colorMap, "GREEN"), true)
+        @Expect(EnumUtils.isValidEnumIgnoreCase(colorMap, "Yellow"), false)
+        @Expect(EnumUtils.isValidEnumIgnoreCase(colorMap, ""), false)
+    }
+
+    @TestCase
     public func testGetEnum() {
         let r = EnumUtils.getEnum(colorMap, "Red")
         match (r) {
@@ -37,6 +45,36 @@ public class EnumUtilsTest {
 
         let y = EnumUtils.getEnum(colorMap, "Yellow")
         @Expect(y.isNone(), true)
+    }
+
+    @TestCase
+    public func testGetEnumIgnoreCase() {
+        let r = EnumUtils.getEnumIgnoreCase(colorMap, "red")
+        @Expect(r.isSome(), true)
+
+        let y = EnumUtils.getEnumIgnoreCase(colorMap, "Yellow")
+        @Expect(y.isNone(), true)
+    }
+
+    @TestCase
+    public func testArrayBasedLookupAndMap() {
+        let values: Array<Color> = [Color.Red, Color.Green, Color.Blue]
+        let nameOf = { c: Color =>
+            match (c) {
+                case Red => "Red"
+                case Green => "Green"
+                case Blue => "Blue"
+            }
+        }
+
+        @Expect(EnumUtils.isValidEnum(values, "Red", nameOf), true)
+        @Expect(EnumUtils.isValidEnum(values, "Yellow", nameOf), false)
+
+        let g = EnumUtils.getEnum(values, "Green", nameOf)
+        @Expect(match (g) { case Some(v) => match (v) { case Green => true; case _ => false }; case None => false }, true)
+
+        let m = EnumUtils.getEnumMap(values, nameOf)
+        @Expect(m.contains("Blue"), true)
     }
 
     @TestCase

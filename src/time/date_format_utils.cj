@@ -17,9 +17,8 @@ import std.time.*
  * ```
  *
  * 架构决策：
- * - 仓颉 1.0.4 的 DateTime 没有直接的 fromEpoch() 方法
- * - 使用 Duration 和数学计算从时间戳构建 DateTime
- * - 当前时间使用 DateTime.now()
+ * - 使用 DateTime.ofEpoch(second, nanosecond) 从时间戳构建 DateTime
+ * - 使用 DateTime.format(pattern) 完成格式化输出
  *
  * @since 1.2.0
  */
@@ -44,21 +43,23 @@ public class DateFormatUtils {
      * - SSS: 毫秒（000-999）
      * - z: 时区偏移（如 +0800）
      *
-     * 注意：由于仓颉 1.0.4 DateTime API 限制，暂时只支持格式化当前时间。
-     * 未来版本可能支持历史时间戳格式化。
      */
-    public static func format(_: Int64, pattern: String): String {
-        // 注意：仓颉 1.0.4 的 DateTime 没有直接的 fromEpoch 方法
-        // 这里返回当前时间的格式化结果
-        // TODO: 未来版本需要添加时间戳转 DateTime 的支持
-        let dateTime = DateTime.now()
+    public static func format(millis: Int64, pattern: String): String {
+        var second = millis / 1000
+        var milliPart = millis % 1000
+        if (milliPart < 0) {
+            milliPart += 1000
+            second -= 1
+        }
+
+        let dateTime = DateTime.ofEpoch(second: second, nanosecond: milliPart * 1000000)
         dateTime.format(pattern)
     }
 
     /**
      * 格式化为时间（HH:mm:ss）
      *
-     * @param millis 毫秒时间戳（当前忽略，使用当前时间）
+     * @param millis 毫秒时间戳
      * @return 格式化后的时间字符串（如 "15:30:45"）
      */
     public static func formatTime(millis: Int64): String {
@@ -68,7 +69,7 @@ public class DateFormatUtils {
     /**
      * 格式化为日期（yyyy-MM-dd）
      *
-     * @param millis 毫秒时间戳（当前忽略，使用当前时间）
+     * @param millis 毫秒时间戳
      * @return 格式化后的日期字符串（如 "2024-01-20"）
      */
     public static func formatDate(millis: Int64): String {
@@ -78,7 +79,7 @@ public class DateFormatUtils {
     /**
      * 格式化为日期时间（yyyy-MM-dd HH:mm:ss）
      *
-     * @param millis 毫秒时间戳（当前忽略，使用当前时间）
+     * @param millis 毫秒时间戳
      * @return 格式化后的日期时间字符串（如 "2024-01-20 15:30:45"）
      */
     public static func formatDateTime(millis: Int64): String {
@@ -90,16 +91,21 @@ public class DateFormatUtils {
      *
      * 格式：yyyy-MM-dd HH:mm:ss.SSS（取毫秒的前3位）
      *
-     * @param millis 毫秒时间戳（当前忽略，使用当前时间）
+     * @param millis 毫秒时间戳
      * @return 格式化后的日期时间字符串（如 "2024-01-20 15:30:45.123"）
      */
-    public static func formatDateTimeMillis(_: Int64): String {
-        let dateTime = DateTime.now()
+    public static func formatDateTimeMillis(millis: Int64): String {
+        var second = millis / 1000
+        var milliPart = millis % 1000
+        if (milliPart < 0) {
+            milliPart += 1000
+            second -= 1
+        }
+
+        let dateTime = DateTime.ofEpoch(second: second, nanosecond: milliPart * 1000000)
         let formatted = dateTime.format("yyyy-MM-dd HH:mm:ss.")
 
-        // 获取纳秒并转换为毫秒（前3位）
-        let nanos = dateTime.nanosecond
-        let millisValue = nanos / 1000000
+        let millisValue = dateTime.nanosecond / 1000000
 
         // 格式化毫秒为3位数字
         let millisStr = if (millisValue < 100) {
@@ -121,7 +127,7 @@ public class DateFormatUtils {
      * 格式：yyyy-MM-dd'T'HH:mm:ssZ
      * 示例：2024-01-20T15:30:45+0800
      *
-     * @param millis 毫秒时间戳（当前忽略，使用当前时间）
+     * @param millis 毫秒时间戳
      * @return ISO8601 格式的日期时间字符串
      */
     public static func formatISO(millis: Int64): String {

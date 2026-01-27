@@ -3,7 +3,6 @@ package commons_lang4cj.test.mutable
 import std.unittest.*
 import std.unittest.testmacro.*
 import commons_lang4cj.mutable.*
-import commons_lang4cj.mutable.IllegalArgumentException as IAE
 
 
 /**

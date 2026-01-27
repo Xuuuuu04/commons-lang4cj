@@ -28,9 +28,9 @@ class DateFormatUtilsTest {
      */
     @TestCase
     func testFormatCustomPattern() {
-        // 注意：当前仓颉 1.0.4 版本只支持格式化当前时间
-        // millis 参数被忽略
         let formatted = DateFormatUtils.format(0, "yyyy-MM-dd")
+        let expected = DateTime.ofEpoch(second: 0, nanosecond: 0).format("yyyy-MM-dd")
+        @Expect(formatted, expected)
 
         // 验证格式：yyyy-MM-dd（10个字符）
         @Expect(formatted.size, 10)
@@ -45,6 +45,8 @@ class DateFormatUtilsTest {
     @TestCase
     func testFormatTime() {
         let formatted = DateFormatUtils.formatTime(0)
+        let expected = DateTime.ofEpoch(second: 0, nanosecond: 0).format("HH:mm:ss")
+        @Expect(formatted, expected)
 
         // 验证格式：HH:mm:ss（8个字符）
         @Expect(formatted.size, 8)
@@ -68,6 +70,8 @@ class DateFormatUtilsTest {
     @TestCase
     func testFormatDate() {
         let formatted = DateFormatUtils.formatDate(0)
+        let expected = DateTime.ofEpoch(second: 0, nanosecond: 0).format("yyyy-MM-dd")
+        @Expect(formatted, expected)
 
         // 验证格式：yyyy-MM-dd（10个字符）
         @Expect(formatted.size, 10)
@@ -91,6 +95,8 @@ class DateFormatUtilsTest {
     @TestCase
     func testFormatDateTime() {
         let formatted = DateFormatUtils.formatDateTime(0)
+        let expected = DateTime.ofEpoch(second: 0, nanosecond: 0).format("yyyy-MM-dd HH:mm:ss")
+        @Expect(formatted, expected)
 
         // 验证格式：yyyy-MM-dd HH:mm:ss（19个字符）
         @Expect(formatted.size, 19)
@@ -119,7 +125,10 @@ class DateFormatUtilsTest {
      */
     @TestCase
     func testFormatDateTimeMillis() {
-        let formatted = DateFormatUtils.formatDateTimeMillis(0)
+        let formatted = DateFormatUtils.formatDateTimeMillis(12345)
+        let dateTime = DateTime.ofEpoch(second: 12, nanosecond: 345000000)
+        let expected = dateTime.format("yyyy-MM-dd HH:mm:ss.") + "345"
+        @Expect(formatted, expected)
 
         // 验证格式：yyyy-MM-dd HH:mm:ss.SSS（23个字符）
         @Expect(formatted.size, 23)
@@ -153,6 +162,8 @@ class DateFormatUtilsTest {
     @TestCase
     func testFormatISO() {
         let formatted = DateFormatUtils.formatISO(0)
+        let expected = DateTime.ofEpoch(second: 0, nanosecond: 0).format("yyyy-MM-dd'T'HH:mm:ssZ")
+        @Expect(formatted, expected)
 
         // 验证格式：YYYY-MM-DDTHH:mm:ssZ 或类似格式
         // 至少应包含 T
@@ -167,11 +178,9 @@ class DateFormatUtilsTest {
      */
     @TestCase
     func testFormatCurrentTime() {
-        // 获取当前时间戳
-        let now = DateTime.now()
-
-        // 格式化当前时间
-        let formatted = DateFormatUtils.formatDateTime(0)
+        let now = DateTime.nowUTC()
+        let millis = now.toUnixTimeStamp().toNanoseconds() / 1000000
+        let formatted = DateFormatUtils.formatDateTime(millis)
 
         // 验证包含日期和时间
         @Expect(formatted.contains("-"), true)
@@ -183,9 +192,9 @@ class DateFormatUtilsTest {
      */
     @TestCase
     func testFormatZero() {
-        // 注意：由于仓颉 1.0.4 限制，millis 参数被忽略
-        // 这里测试的是当前时间，而不是 1970-01-01
         let formatted = DateFormatUtils.formatDateTime(0)
+        let expected = DateTime.ofEpoch(second: 0, nanosecond: 0).format("yyyy-MM-dd HH:mm:ss")
+        @Expect(formatted, expected)
 
         // 验证格式正确
         @Expect(formatted.size, 19)
@@ -197,9 +206,9 @@ class DateFormatUtilsTest {
      */
     @TestCase
     func testFormatNegative() {
-        // 注意：由于仓颉 1.0.4 限制，millis 参数被忽略
-        // 负数时间戳仍然返回当前时间的格式化结果
         let formatted = DateFormatUtils.formatDateTime(-86400000)
+        let expected = DateTime.ofEpoch(second: -86400, nanosecond: 0).format("yyyy-MM-dd HH:mm:ss")
+        @Expect(formatted, expected)
 
         // 验证格式正确
         @Expect(formatted.size, 19)
